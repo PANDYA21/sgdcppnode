@@ -1,0 +1,23 @@
+{
+	"name": "sgd-cpp-nodejs",
+	"description": "",
+	"keywords": [],
+	"version": "0.0.1",
+	"private": true,
+	"main": "index.js",
+	"dependencies": {
+		"node-addon-api": "^0.6.3"
+	},
+	"config": {
+		"dev_port": 8081
+	},
+	"scripts": {
+		"build": "node-gyp configure &&npm install",
+		"test": "node test"
+	},
+	"author": "bhaumik.pandya21@gmail.com",
+	"license": "MIT",
+	"engines": {
+		"node": "10.4.1"
+	}
+}
