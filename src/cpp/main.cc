@@ -20,22 +20,21 @@ void sgd(const FunctionCallbackInfo<Value>& args) {
   }
 
   // parse arguments
-  double xt = args[0]->NumberValue();
-  double yt = args[1]->NumberValue();
+  Local<Array> xt = Local<Array>::Cast(args[0]);
+  Local<Array> yt = Local<Array>::Cast(args[1]);
   double learning_rate = args[2]->NumberValue();
   unsigned int maxiter = args[3]->NumberValue();
   double minerr = args[4]->NumberValue();
-  // double slope_init = args[5]->NumberValue();
-  // double constant_init = args[6]->NumberValue();
+
+  printf("minerr: %f\n", minerr);
+  printf("maxiter: %d\n", maxiter);
+  printf("learning_rate: %f\n", learning_rate);
 
   double learned_slope = learnSlope(xt, yt, learning_rate, maxiter, minerr);
 
   // export
   Local<Object> finans = Object::New(isolate);
   finans->Set(String::NewFromUtf8(isolate, "learned_slope"), Number::New(isolate, learned_slope));
-  // finans->Set(String::NewFromUtf8(isolate, "weights"), weights);
-  // finans->Set(String::NewFromUtf8(isolate, "weights"), weights);
-  // finans->Set(String::NewFromUtf8(isolate, "weights"), weights);
 
   // Set the return weight (using the passed in FunctionCallbackInfo<Value>&)
   args.GetReturnValue().Set(finans);
