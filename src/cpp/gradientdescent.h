@@ -49,7 +49,7 @@ double* learnSlope(v8::Local<v8::Array> x_t, v8::Local<v8::Array> y_t, double le
 		}
 
 		if (total_err <= minerr) {
-			// break the loop
+			// break and exit the loop
 			if (verbose)
 			{
 				printf("Minerr reached in iterations %d %f %f\n", i, w1, w2);
@@ -57,6 +57,7 @@ double* learnSlope(v8::Local<v8::Array> x_t, v8::Local<v8::Array> y_t, double le
 			
 			slopes[0] = w1;
 			slopes[1] = w2;
+			printf("Required iterations: %d", i);
 			return slopes;
 		}
 	}
@@ -68,6 +69,7 @@ double* learnSlope(v8::Local<v8::Array> x_t, v8::Local<v8::Array> y_t, double le
 	
 	slopes[0] = w1;
 	slopes[1] = w2;
+	printf("Required iterations: %d", maxiter);
 	return slopes;
 }
 
