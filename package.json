@@ -6,6 +6,7 @@
 	"private": true,
 	"main": "index.js",
 	"dependencies": {
+		"lodash": "^4.17.10",
 		"node-addon-api": "^0.6.3"
 	},
 	"config": {
@@ -19,5 +20,6 @@
 	"license": "MIT",
 	"engines": {
 		"node": "10.4.1"
-	}
+	},
+	"devDependencies": {}
 }

@@ -2,61 +2,50 @@
 #define GRADIENTDESCENT_H_INCLUDED
 #include <node.h>
 #include <math.h>
-# include "typecastings.h"
 using namespace v8; 
 
 double calculateError(double label, double calculated) {
-	// return sqrt(label*label - calculated*calculated);
-	return label - calculated;
+	return (calculated - label) * (calculated - label);
 }
 
-double gd(double learning_rate, double err, double current_slop) {
-	// return - err * (1 - err) * learning_rate / current_slop;
-	return err * learning_rate;
+double gd(double w1, double w2, double ita, double x_i, double y_i) {
+	return - ita * 2 * (w1 + (w2 * x_i) - y_i);
 }
 
-double mean(double* arr) {
-	double summ = 0;
-	unsigned int len = sizeof(arr)/sizeof(arr[0]);
-	for (int i = 0; i < len; ++i)
-	{
-		summ += arr[i];
-	}
+double* learnSlope(double xt, double yt, double learning_rate, unsigned int maxiter, double minerr) {
+	double w1 = 0.0;
+	double w2 = 0.0;
+	double y_calculated = 0.0;
+	double err = 0.0;
 
-	return summ / len;
-}
-
-double learnSlope(v8::Local<v8::Array> xt, v8::Local<v8::Array> yt, double learning_rate, unsigned int maxiter, double minerr) {
-	double *x_t = jsArrayToCppArray(xt);
-	double *y_t = jsArrayToCppArray(yt);
-	double slope = 1.0;
-	double *y_calculated = x_t;
-	double *err = x_t;
-
-	for (unsigned int i = 0; i < sizeof(x_t)/sizeof(x_t[0]); ++i)
-	{
-		y_calculated[i] = 0;
-		err[i] = 1;
-		printf("%f, %f\n", y_calculated[i], err[i]);
-	}
+	double *slopes = 0;
+	slopes = new double[2];
+	printf("slopes[0]: %f\n", slopes[0]);
+	printf("slopes[1]: %f\n", slopes[1]);
 
 	for (unsigned int i = 0; i < maxiter; ++i)
 	{
-		for (unsigned int j = 0; j < xt->Length(); ++j)
-		{
-			y_calculated[j] = x_t[j] * slope;
-			err[j] = calculateError(y_t[j], y_calculated[j]);
-			slope += gd(learning_rate, err[j], slope);
-			printf("iter: %d  j: %d  error: %f\n", i, j, err[j]);
+		y_calculated = w1 + xt * w2;
+		err = calculateError(yt, y_calculated);
+		if (err <= minerr) {
+			printf("Minerr reached in iterations %d %f %f\n", i, w1, w2);
+			slopes[0] = w1;
+			slopes[1] = w2;
+			return slopes;
+			// return w2;
 		}
-		if (abs(mean(err)) <= minerr) {
-			printf("Minerr %f reached in iterations %d\n", abs(mean(err)), i);
-			return slope;
-		}
+		// w2 += gd(learning_rate, err, w2, xt, yt);
+		double this_del = gd(w1, w2, learning_rate, xt, yt);
+		w1 += this_del;
+		w2 += this_del * xt;
+		printf("iter: %d error: %f\n", i, err);
 	}
 
-	printf("Maxiter reached");
-	return slope;
+	printf("Maxiter reached.\n %f %f", w1, w2);
+	slopes[0] = w1;
+	slopes[1] = w2;
+	return slopes;
+	// return w2;
 }
 
 #endif
