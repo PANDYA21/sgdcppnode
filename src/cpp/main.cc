@@ -20,24 +20,33 @@ void sgd(const FunctionCallbackInfo<Value>& args) {
   }
 
   // parse arguments
-  double xt = args[0]->NumberValue();
-  double yt = args[1]->NumberValue();
+  Local<Array> xt = Local<Array>::Cast(args[0]);
+  Local<Array> yt = Local<Array>::Cast(args[1]);
+  
   double learning_rate = args[2]->NumberValue();
   unsigned int maxiter = args[3]->NumberValue();
   double minerr = args[4]->NumberValue();
+  bool verbose = args[5]->BooleanValue();
+  
+  if (verbose)
+  {
+    printf("Verbose mode \n");
+  }
 
-  double* learned_slope = learnSlope(xt, yt, learning_rate, maxiter, minerr);
+  if (xt->Length() != yt->Length())
+  {
+    // Throw an Error that is passed back to JavaScript
+    isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Input and Output lengths do not match.")));
+    return;
+  }
+
+  double* learned_slopes = learnSlope(xt, yt, learning_rate, maxiter, minerr, verbose);
 
   // export
   Local<Object> finans = Object::New(isolate);
 
-  finans->Set(String::NewFromUtf8(isolate, "w1"), Number::New(isolate, learned_slope[0]));
-  finans->Set(String::NewFromUtf8(isolate, "w2"), Number::New(isolate, learned_slope[1]));
-
-  // Local<Array> slopes = cpp1DArrayToJs1DArray(isolate, learned_slope);
-  // finans->Set(String::NewFromUtf8(isolate, "learned_slope"), slopes);
-
-  // finans->Set(String::NewFromUtf8(isolate, "learned_slope"), Number::New(isolate, learned_slope));
+  finans->Set(String::NewFromUtf8(isolate, "w1"), Number::New(isolate, learned_slopes[0]));
+  finans->Set(String::NewFromUtf8(isolate, "w2"), Number::New(isolate, learned_slopes[1]));
 
   // Set the return weight (using the passed in FunctionCallbackInfo<Value>&)
   args.GetReturnValue().Set(finans);
