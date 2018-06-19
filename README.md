@@ -1,7 +1,42 @@
 # C++ based Stochastic Gradient Descent Optimization module for Node.JS
 This module is implemented on C++ based [sgd optimizer](https://en.wikipedia.org/wiki/Stochastic_gradient_descent#Iterative_method).
 
+## Usage
+Install:
+```shell
+npm install git+https://github.com/RAW21/sgdcppnode.git --save
+```
+
+Require:
+```js
+const sgd = require('sgd-cpp-nodejs');
+
+// generate synthetic data
+const w1 = 3; // intersection with x-axis
+const w2 = 20; // slope of the line
+const xt = [0.1, 0.2, 0.3];
+const f = (x) => w1 + w2 * x;
+const yt = [f(0.1), f(0.2), f(0.3)];
+
+const slopes = sgd({
+	input: xt,
+	output: yt,
+	learning_rate: 0.3, 
+	maxiter: 1e5,
+	minerr: 1e-13,
+	verbose: false
+});
+
+console.log(slopes);
+
+// Expected output:
+//   { w1: 3.0000004020842144, w2: 19.999998451399563 }
+//   Required iterations: 1033
+```
+
 ## Why
+C++ add-ons for nodeJS are quite performant than native node modules. The motivation behind developing this add-on/module is based on the following benchmark.
+
 ### Benchmark
 #### Single Attempt
 Weights to learn:
@@ -35,10 +70,17 @@ Required iterations: 100000
 ```
 
 #### Multiple Attempts
-With the same parameters except `const attempts = 1;`, the outcome is:
+With the same parameters except `const attempts = 50;`, the outcome is:
+
 ```js
 Average JS time:  130.52
 Average CPP time:  84.54
 ```
 
 CPP turns out to be approximately <b style="color: lightgreen; background-color: black;">35%</b> faster than JS!
+
+
+## TODO
+- Polynomial regression
+- Exponential curve fitting
+- Evaluation measures

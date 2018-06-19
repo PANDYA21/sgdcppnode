@@ -1,17 +1,11 @@
 const sgd = require('.');
-const _ = require('lodash');
 
 // generate synthetic data
-const nrows = 10; // data size
-let xt = [];
-let yt = [];
-const m = 20; // slope of the line
-const c = 3; // intersection with x-axis
-
-for (let i = 1; i < nrows; i++) {
-	xt.push(i / Math.pow(nrows, 1));
-	yt.push((m * i) / Math.pow(nrows, 1) + c);
-}
+const w1 = 3; // intersection with x-axis
+const w2 = 20; // slope of the line
+const xt = [0.1, 0.2, 0.3];
+const f = (x) => w1 + w2 * x;
+const yt = [f(0.1), f(0.2), f(0.3)];
 
 const slopes = sgd({
 	input: xt,
@@ -23,3 +17,7 @@ const slopes = sgd({
 });
 
 console.log(slopes);
+
+// Expected output:
+//   { w1: 3.0000004020842144, w2: 19.999998451399563 }
+//   Required iterations: 1033
