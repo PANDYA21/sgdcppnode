@@ -47,13 +47,7 @@ void sgd(const FunctionCallbackInfo<Value>& args) {
   Local<Object> resp = Object::New(isolate);
   Local<Array> weights = cpp1DArrayToJs1DArray(isolate, learned_slopes, order);
   resp->Set(String::NewFromUtf8(isolate, "weights"), weights);
-
-  // v8::Local<v8::Array> resp = v8::Array::New(isolate);
-  // for (unsigned int i = 0; i < order; ++i)
-  // {
-  //   resp->Set(i, Number::New(isolate, learned_slopes[i]));
-  // }
-
+  
   // Set the return weight (using the passed in FunctionCallbackInfo<Value>&)
   args.GetReturnValue().Set(resp);
 }

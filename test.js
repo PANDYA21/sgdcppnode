@@ -25,9 +25,9 @@ const learned_weights = sgd({
 	output: yt,
 	learning_rate: 0.3, 
 	order: weights.length, 
-	maxiter: 2e5,
+	maxiter: 10000,
 	minerr: 1e-5,
-	verbose: true
+	verbose: false
 });
 
 console.log(learned_weights);

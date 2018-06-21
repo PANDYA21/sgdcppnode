@@ -9,6 +9,15 @@ double calculateError(double label, double calculated) {
 	return (calculated - label) * (calculated - label);
 }
 
+double f(double x, double* weights, unsigned int length) {
+	double y = 0;
+	for (unsigned int i = 0; i < length; ++i)
+	{
+		y += pow(x, i) * weights[i];
+	}
+	return y;
+}
+
 double _calcDelta(double x, double y,double* weights, double ita, unsigned int order) {
 	double ans = 0;
 	for (unsigned int i = 0; i < order; ++i) 
@@ -34,7 +43,7 @@ double* learnSlope(v8::Local<v8::Array> x_t, v8::Local<v8::Array> y_t, unsigned 
 	weights = new double[order];
 	double* xt = jsArrayToCppArray(x_t);
 	double* yt = jsArrayToCppArray(y_t);
-	unsigned int length = x_t->Length();
+	unsigned int datalength = x_t->Length();
 
 	for (unsigned int i = 0; i < order; ++i) 
 	{
@@ -42,15 +51,28 @@ double* learnSlope(v8::Local<v8::Array> x_t, v8::Local<v8::Array> y_t, unsigned 
 	}
 	for (unsigned int i = 0; i < maxiter; ++i) 
 	{
-		for (unsigned int j = 0; j < length; ++j) 
+		double err = 0;
+		for (unsigned int j = 0; j < datalength; ++j) 
 		{
 			double* deltas = caluclateDelta(xt[j], yt[j], order, weights, learning_rate);
 			for (unsigned int k = 0; k < order; ++k) 
 			{
 				weights[k] += deltas[k];
+				err += calculateError(f(xt[j], weights, order), yt[j]);
 			}
 		}
+		if (verbose)
+		{
+			printf("iter: %d  err: %f\n", i, err);
+		}
+		if (err <= minerr)
+		{
+			printf("Iterations requied: %d\n", i);
+			return weights;
+		}
 	}
+
+	printf("Iterations requied: %d\n", maxiter);
 	return weights;
 }
 
