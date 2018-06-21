@@ -6,7 +6,7 @@
 using namespace v8; 
 
 double calculateError(double label, double calculated) {
-	return (calculated - label) * (calculated - label);
+	return pow(calculated - label,  2);
 }
 
 double f(double x, double* weights, unsigned int length) {
@@ -16,6 +16,17 @@ double f(double x, double* weights, unsigned int length) {
 		y += pow(x, i) * weights[i];
 	}
 	return y;
+}
+
+double rmse(double* xt, double* yt, double* weights, unsigned int datalength, unsigned int order) {	
+	double err = 0;
+	for (unsigned int i = 0; i < datalength; ++i)
+	{
+		double this_y = f(xt[i], weights, order);
+		err += calculateError(yt[i], this_y);
+	}
+
+	return sqrt(err);
 }
 
 double _calcDelta(double x, double y,double* weights, double ita, unsigned int order) {
@@ -38,12 +49,9 @@ double* caluclateDelta(double x, double y, unsigned int order, double* weights, 
 	return deltas;
 }
 
-double* learnSlope(v8::Local<v8::Array> x_t, v8::Local<v8::Array> y_t, unsigned int order, double learning_rate, unsigned int maxiter, double minerr, bool verbose) {
+double* learnSlope(double* xt, double* yt, unsigned int datalength, unsigned int order, double learning_rate, unsigned int maxiter, double minerr, bool verbose) {
 	double* weights = 0;	
 	weights = new double[order];
-	double* xt = jsArrayToCppArray(x_t);
-	double* yt = jsArrayToCppArray(y_t);
-	unsigned int datalength = x_t->Length();
 
 	for (unsigned int i = 0; i < order; ++i) 
 	{

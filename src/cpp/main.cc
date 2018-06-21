@@ -1,7 +1,7 @@
 // addon.cc
 #include <node.h>
 #include <math.h>
-#include "gradientdescent.h"
+#include "wrapper.h"
 #include "typecastings.h"
 
 namespace demo {
@@ -41,13 +41,11 @@ void sgd(const FunctionCallbackInfo<Value>& args) {
     return;
   }
 
-  double* learned_slopes = learnSlope(xt, yt, order, learning_rate, maxiter, minerr, verbose);
+  // double* learned_slopes = learnSlope(xt, yt, order, learning_rate, maxiter, minerr, verbose);
 
   // export
-  Local<Object> resp = Object::New(isolate);
-  Local<Array> weights = cpp1DArrayToJs1DArray(isolate, learned_slopes, order);
-  resp->Set(String::NewFromUtf8(isolate, "weights"), weights);
-  
+  Local<Object> resp = wrapItUp(isolate, xt, yt, order, learning_rate, maxiter, minerr, verbose);
+
   // Set the return weight (using the passed in FunctionCallbackInfo<Value>&)
   args.GetReturnValue().Set(resp);
 }

@@ -16,7 +16,7 @@ const f = (x) => {
 };
 const yt = (() => {
 	let y = [];
-	xt.forEach(xx => y.push(f(xx)));
+	xt.forEach(x => y.push(f(x)));
 	return y;
 })();
 
@@ -26,12 +26,20 @@ const learned_weights = sgd({
 	learning_rate: 0.3, 
 	order: weights.length, 
 	maxiter: 10000,
-	minerr: 1e-5,
+	minerr: 1e-6,
 	verbose: false
 });
 
-console.log(learned_weights);
+console.log(JSON.stringify(learned_weights, null, 2));
 
 // Expected output:
-//   { weights: [ 3.0000000000000107, 20, 4.999999999999847 ] }
-//   Required iterations: 1033
+//   {
+//     "weights": [
+//       3.000928689352925,
+//       19.999955449600268,
+//       4.986878794183504
+//     ],
+//     "rmse": 0.0013137351783434744
+//   }
+//   Iterations requied: 1102
+//   [Finished in 0.2s]
