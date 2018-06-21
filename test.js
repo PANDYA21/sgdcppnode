@@ -24,10 +24,12 @@ const learned_weights = sgd({
 	input: xt,
 	output: yt,
 	learning_rate: 0.3, 
-	order: weights.length, 
-	maxiter: 10000,
+	order: -1, // self learn the best order for polynomial fitting
+	maxiter: 1e5,
 	minerr: 1e-6,
-	verbose: false
+	verbose: false,
+	lowerbound: 1,
+	upperbound: 4
 });
 
 console.log(JSON.stringify(learned_weights, null, 2));

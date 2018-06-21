@@ -8,7 +8,9 @@ function sgdWrapper(params) {
 		params.learning_rate,
 		params.maxiter,
 		params.minerr,
-		params.verbose 
+		params.verbose,
+		params.lowerbound || 1,
+		params.upperbound || 4 
 	);
 }
 

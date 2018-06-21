@@ -28,6 +28,8 @@ void sgd(const FunctionCallbackInfo<Value>& args) {
   unsigned int maxiter = args[4]->NumberValue();
   double minerr = args[5]->NumberValue();
   bool verbose = args[6]->BooleanValue();
+  unsigned int lowerbound = args[7]->NumberValue();
+  unsigned int upperbound = args[8]->NumberValue();
   
   if (verbose)
   {
@@ -41,10 +43,8 @@ void sgd(const FunctionCallbackInfo<Value>& args) {
     return;
   }
 
-  // double* learned_slopes = learnSlope(xt, yt, order, learning_rate, maxiter, minerr, verbose);
-
   // export
-  Local<Object> resp = wrapItUp(isolate, xt, yt, order, learning_rate, maxiter, minerr, verbose);
+  Local<Object> resp = wrapItUp(isolate, xt, yt, order, learning_rate, maxiter, minerr, verbose, lowerbound, upperbound);
 
   // Set the return weight (using the passed in FunctionCallbackInfo<Value>&)
   args.GetReturnValue().Set(resp);
