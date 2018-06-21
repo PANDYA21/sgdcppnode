@@ -12,7 +12,7 @@ using namespace v8;
 void sgd(const FunctionCallbackInfo<Value>& args) {
   Isolate* isolate = args.GetIsolate();
   // Check the number of arguments passed.
-  if (args.Length() < 5) {
+  if (args.Length() < 6) {
     // Throw an Error that is passed back to JavaScript
     isolate->ThrowException(Exception::TypeError(
         String::NewFromUtf8(isolate, "Wrong number of arguments")));
@@ -23,10 +23,11 @@ void sgd(const FunctionCallbackInfo<Value>& args) {
   Local<Array> xt = Local<Array>::Cast(args[0]);
   Local<Array> yt = Local<Array>::Cast(args[1]);
   
-  double learning_rate = args[2]->NumberValue();
-  unsigned int maxiter = args[3]->NumberValue();
-  double minerr = args[4]->NumberValue();
-  bool verbose = args[5]->BooleanValue();
+  unsigned int order = args[2]->NumberValue();
+  double learning_rate = args[3]->NumberValue();
+  unsigned int maxiter = args[4]->NumberValue();
+  double minerr = args[5]->NumberValue();
+  bool verbose = args[6]->BooleanValue();
   
   if (verbose)
   {
