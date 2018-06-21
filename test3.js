@@ -47,7 +47,7 @@ function iterate(x, y, ita, maxiter, order) {
 	return weights;
 }
 
-const ans = iterate(x, y, 0.3, 10000, 3);
+const ans = iterate(x, y, 0.3, 1e5, 10);
 const y_c = (() => { 
 	let y = [];
 	_.each(x, xx => y.push(f(xx, ans))); 

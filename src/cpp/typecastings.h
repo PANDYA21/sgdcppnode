@@ -16,9 +16,9 @@ double *jsArrayToCppArray(v8::Local<v8::Array> arr) {
   return carr;
 }
 
-v8::Local<v8::Array> cpp1DArrayToJs1DArray(Isolate *isolate, double *ans) {
+v8::Local<v8::Array> cpp1DArrayToJs1DArray(Isolate *isolate, double *ans, unsigned int length) {
   v8::Local<v8::Array> finans = v8::Array::New(isolate);
-  for (unsigned int i = 0; i < sizeof(ans)/sizeof(ans[0]); ++i)
+  for (unsigned int i = 0; i < length; ++i)
   {
     finans->Set(i, Number::New(isolate, ans[i]));
   }
